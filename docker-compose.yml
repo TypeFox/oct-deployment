@@ -1,0 +1,9 @@
+services:
+  oct-server-gce:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: oct/oct-server-gce
+    ports:
+      - 8100:8100
+    container_name: oct-server-gce
