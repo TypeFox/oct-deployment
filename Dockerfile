@@ -4,7 +4,7 @@ FROM node:lts
 RUN mkdir -p /home/app \
     && git clone https://github.com/TypeFox/open-collaboration-tools.git /home/app \
     && cd /home/app \
-    && git checkout ad2f1a9551875620ea2d1c601ea1a94865b68ae3
+    && git checkout e2503da2e9cfa3ad16c9dbe225f5933074278cda
 
 # Build
 RUN cd /home/app \
