@@ -21,36 +21,36 @@ Whenever possible steps are stored in bash scripts which utilize gcloud commands
 
 ## Semi-automatic Preparation
 
-A couple of manual steps are required before the automated part
+A couple of manual steps are required before the automated part.
 
-- [Perform auth login](./scripts/prepare/authLogin.sh). All info is stored in a named container volume, so the info is persisted. [Print auth info](./scripts/prepare/printAuth.sh). You only have to do this once!
-- [Create an env file](./scripts/prepare/createEnvFile.sh) from template in the project's root. Adjust the values accordingly and in the order descibed below (you only have to do this once):
-  - First set the `PROJECT_ID` and:
-    - [Create the project](./scripts/prepare/createProject.sh). It also sets the default project in the local settings.
-  - Use [printBillingAccounts.sh](./scripts/prepare/printBillingAccounts.sh) to retrieve the billing account number and set `BILLING_ACCOUNT_ID` in the env file.
-  - [Enable all required APIs](./scripts/prepare/enableRequiredApis.sh). It requires the billing account previously set.
-  - Use [printRegions.sh](./scripts/prepare/printRegions.sh) to print all regions and set `DEFAULT_REGION` in the env file.
-    - Now [set the default region](./scripts/prepare/setDefaultRegion.sh) in the local config.
-  - Retreive the installation id of the GitHub Cloud Google Cloud Build app here: <https://github.com/settings/installations>. You have to bind this project to this repository. Set the `GITHUB_APP_ID` in the env file.
-  - Update the *GitHub repository* related variables
-  - Adjust OCT environment properties if values are already known. Otherwise, leave as is, because they can be altered and updated later.
-- [Verify the env file](./scripts/prepare/verifyEnvFile.sh)
-- GitHub:
-  - Create a classic access token with all `repo` and `read:user` permissions. If your app is installed in an organization, make sure to also select the `read:org` permission. ([see](https://cloud.google.com/build/docs/automating-builds/github/connect-repo-github?generation=2nd-gen#connecting_a_github_host_programmatically))
-  - Store this token in `<repo-root>/.local/gh.token`. The folder is in contained `.gitignore` and the token can be deleted once it was successfully processed with the next step:
-  - [Store the GitHub token as secret](./scripts/prepare/storeGitHubToken.sh)
+1. *You only have to do this once*: [Perform auth login](./scripts/prepare/authLogin.sh). It will provide a URL you need to paste to browser manually. Once you enter the generated confomation token back in the terminal the process is completed. All info is stored in a named container volume, so the info is persisted and data will be back after container restarts. You can [print auth info with a script](./scripts/prepare/printAuth.sh).
+2. You need to install [Google Cloud Build
+ GitHub App](https://github.com/marketplace/google-cloud-build) in GitHub. Configure the repository the repository that should be used bind to it. Once you did, you need to retrieve the installation id Google Cloud Build app here: <https://github.com/settings/installations>. The id needs to be used in step 3.5. below.
+3. *You only have to do this once*: [Create an env file](./scripts/prepare/createEnvFile.sh) from template in the project's root. Adjust the values accordingly and in the order descibed below:
+    1. First set the `PROJECT_ID` in the env file and save it. Directly [use a script to create the project](./scripts/prepare/createProject.sh) to create a project. It also sets the default project in the local settings.
+    2. Use [printBillingAccounts.sh](./scripts/prepare/printBillingAccounts.sh) to retrieve the billing account number and set `BILLING_ACCOUNT_ID` in the env file.
+    3. [Enable all required APIs](./scripts/prepare/enableRequiredApis.sh). It requires the billing account previously set.
+    4. Use [printRegions.sh](./scripts/prepare/printRegions.sh) to print all regions and set `DEFAULT_REGION` in the env file. Save the env file. [Use another script set the default region](./scripts/prepare/setDefaultRegion.sh) in the local glcoud config.
+    5. Set the `GITHUB_APP_ID` in the env file retrieved in step 2 which will bind the project to the specified repository.
+    6. Update the *GitHub repository* related variables
+    7. Adjust OCT environment properties if values are already known. Otherwise, leave as is, because they can be altered and updated later.
+4. [Verify the env file](./scripts/prepare/verifyEnvFile.sh)
+5. GitHub:
+  4.a. Create a classic access token with all `repo` and `read:user` permissions. If your app is installed in an organization, make sure to also select the `read:org` permission. ([see](https://cloud.google.com/build/docs/automating-builds/github/connect-repo-github?generation=2nd-gen#connecting_a_github_host_programmatically))
+  4.b. Store this token in `<repo-root>/.local/gh.token`. The folder is in contained `.gitignore` and the token can be deleted once it was successfully processed with the next step:
+  4.c. [Store the GitHub token as secret](./scripts/prepare/storeGitHubToken.sh)
 
 ## Setup
 
-You can execute all setup steps one after the other:
+**Either**: Execute all setup steps one after the other:
 
-- [Create new service account and update required permissions](./scripts/setup/updateServiceAccounts.sh)
-- [Create a builds to repo connection](./scripts/setup/createBuildsConnection.sh)
-- [Create a builds repository](./scripts/setup/createBuildsRepository.sh)
-- [Create a docker artifacts repository](./scripts/setup/createArtifactsRepository.sh)
-- [Create a builds trigger](./scripts/setup/createBuildsTrigger.sh)
+1. [Create new service account and update required permissions](./scripts/setup/updateServiceAccounts.sh)
+2. [Create a builds to repo connection](./scripts/setup/createBuildsConnection.sh)
+3. [Create a builds repository](./scripts/setup/createBuildsRepository.sh)
+4. [Create a docker artifacts repository](./scripts/setup/createArtifactsRepository.sh)
+5. [Create a builds trigger](./scripts/setup/createBuildsTrigger.sh)
 
-Or perform them all sequentially with one script:
+**Or**: Perform them all sequentially with one script:
 
 - [Perform all steps](./scripts/performAllSteps.sh)
 
