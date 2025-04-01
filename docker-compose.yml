@@ -1,9 +1,11 @@
 services:
-  oct-server-gce:
+  oct-server-local:
     build:
       dockerfile: ./Dockerfile
       context: .
-    image: oct/oct-server-gce
     ports:
       - 8100:8100
-    container_name: oct-server-gce
+    container_name: oct-server-local
+    tty: true
+    environment:
+      - OCT_ACTIVATE_SIMPLE_LOGIN=true

@@ -1,0 +1,19 @@
+services:
+  gcloud-run:
+    container_name: gcloud-run
+    image: gcloud-run
+    build:
+      dockerfile: ./dev.Dockerfile
+      context: .
+      platforms:
+        - "linux/amd64"
+    platform: linux/amd64
+    volumes:
+      - ./:/var/opt/gcloud
+      - gcloud-config:/root/.config/gcloud:rw
+    tty: true
+    command: [bash]
+    working_dir: /var/opt/gcloud
+
+volumes:
+  gcloud-config:
