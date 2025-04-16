@@ -1,16 +1,26 @@
-FROM node:lts
+FROM node:lts-slim
 
+ARG BUILDDIR=/home/app/build
+ARG CHECHKOUT_SHA=497b8d9b3d9cac64a8cc4c1130e62b40549b11da
+
+# Install git
 # Clone repo and checkout specific commit
-RUN mkdir -p /home/app \
-    && git clone https://github.com/TypeFox/open-collaboration-tools.git /home/app \
-    && cd /home/app \
-    && git checkout 0bd4032fb5a0a154c9241b7f757c70e8738b5fdb
-
-# Build
-RUN cd /home/app \
+# Then build, copy bundle and clean-up build
+# Remove git again
+RUN apt update \
+    && apt install -y git \
+    && mkdir -p ${BUILDDIR} \
+    && git clone https://github.com/TypeFox/open-collaboration-tools.git ${BUILDDIR} \
+    && cd ${BUILDDIR} \
+    && git checkout ${CHECHKOUT_SHA} \
+    && cd ${BUILDDIR} \
     && npm i \
-    && npm run build
+    && npm run build \
+    && cp ${BUILDDIR}/packages/open-collaboration-server/bundle/app.* /home/app \
+    && rm -fr ${BUILDDIR} \
+    && apt remove -y git \
+    && apt autoremove -y
 
 EXPOSE 8100
 WORKDIR /home/app
-CMD [ "bash", "-c", "npm run start" ]
+CMD [ "bash", "-c", "node /home/app/app.js --hostname=0.0.0.0" ]
