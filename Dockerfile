@@ -23,4 +23,4 @@ RUN apt update \
 
 EXPOSE 8100
 WORKDIR /home/app
-CMD [ "bash", "-c", "node /home/app/app.js start --hostname=0.0.0.0" ]
+CMD [ "bash", "-c", "node /home/app/app.js --hostname=0.0.0.0" ]
