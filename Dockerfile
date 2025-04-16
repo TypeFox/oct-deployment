@@ -1,7 +1,7 @@
 FROM node:lts-slim
 
 ARG BUILDDIR=/home/app/build
-ARG CHECHKOUT_SHA=497b8d9b3d9cac64a8cc4c1130e62b40549b11da
+ARG CHECHKOUT_SHA=735fbe0b66983c2be7f3df9a75a67fef21ee6de4
 
 # Install git
 # Clone repo and checkout specific commit
